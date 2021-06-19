@@ -10,7 +10,6 @@ questionBank:[],
 score:0,
 response:0
 };
-
 getQuestion=()=>{
   quizServices().then(question=>{
     this.setState({
@@ -18,18 +17,15 @@ getQuestion=()=>{
     })
   })
 };
-componentDidMount(){
-  this.getQuestion();
-}
 computeAnswer=(answer,correctAnswer)=>{
   if(answer===correctAnswer){
       this.setState({
         score:this.state.score +1
       });
     }
-    this.setState({
-      response:this.state.response < 5 ? this.state.response +1 :5
-    });
+      this.setState({
+        response:this.state.response < 5 ? this.state.response +1 :5
+      });
 }
 playAgain=()=>{
   this.getQuestion();
@@ -38,7 +34,9 @@ playAgain=()=>{
     response:0
   })
 }
-
+componentDidMount(){
+  this.getQuestion();
+}
   render(){
   return (
     <div className="container">
@@ -52,7 +50,7 @@ playAgain=()=>{
          question={question}
          options={answers}
          key={questionId}
-         selected={(answer)=>this.computeAnswer(answer,correct)}
+         selected={answer=>this.computeAnswer(answer,correct)}
          />)
         )
       }
@@ -63,4 +61,41 @@ playAgain=()=>{
 
 export default App;
 
+//result
+import React from 'react'
 
+function Result({score,playAgain}) {
+    return (
+        <div className='score-board'>
+            <div className='score'>You scored {score}/5 correct answer</div>
+
+            <button className='playBtn' onClick={playAgain}>Play again!</button>
+            
+        </div>
+    )
+}
+
+export default Result
+
+//questionbox
+import React,{useState} from 'react';
+
+function QuestionBox({question,options,selected}){
+  const [answer,setAnswer]=useState(options);
+
+  return(
+    <div className='questionBox'>
+    <div className='question'>{question}</div>
+    {
+      answer.map((text,index)=>(
+        <button 
+        key={index} 
+        className='answerBtn'
+        onClick={()=>{setAnswer([text]); selected(text);}}        
+        >{text}</button>
+      ))
+    }
+    </div>
+  )
+}
+export default QuestionBox;
